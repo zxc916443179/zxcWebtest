@@ -1,0 +1,11 @@
+
+.idea/dataSources.local.xml
+.idea/dataSources/2520bfa6-85b9-418c-824e-687d4560881c/_src_/
+.idea/dataSources/2520bfa6-85b9-418c-824e-687d4560881c/_staging_/
+.idea/dataSources/7cff90b5-ad5e-484d-9e47-7568a9f22801/_src_/
+.idea/dataSources/7cff90b5-ad5e-484d-9e47-7568a9f22801/_staging_/
+.idea/inspectionProfiles/
+.idea/libraries/
+.idea/workspace.xml
+src/test/
+target/
