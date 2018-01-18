@@ -31,8 +31,10 @@ public class Interceptor implements HandlerInterceptor {
         httpServletResponse.setHeader("Access-Control-Allow-Credentials", "true");
         httpServletResponse.setHeader("Access-Control-Allow-Methods", "POST");
         String path = httpServletRequest.getRequestURI();
-        if (httpSession.getAttribute(httpSession.getId()) == null)
-        throw new RETCode(101);
+        if (httpSession.getAttribute(httpSession.getId()) == null) {
+            httpServletResponse.setStatus(200);
+            throw new RETCode(101);
+        }
         userAuthService = (UserAuthService)SpringUtil.getBean("userAuthServiceImpl");
         String sessionId = httpSession.getId();
         String account = (String)httpSession.getAttribute(sessionId);
