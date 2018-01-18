@@ -50,6 +50,7 @@ class RETCode extends Exception {
         super();
         this.code = code;
         codemap.put(0, "操作成功");
+        codemap.put(107, "密码错误");
         codemap.put(106, "账户名或密码错误");
         codemap.put(100, "未知错误");
         codemap.put(101, "未登录");
@@ -57,6 +58,7 @@ class RETCode extends Exception {
         codemap.put(103, "账户名已存在");
         codemap.put(104, "装备名称已存在");
         codemap.put(105, "没有权限");
+        codemap.put(108, "单位名已存在");
     }
 
 }

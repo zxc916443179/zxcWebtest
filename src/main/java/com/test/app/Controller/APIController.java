@@ -148,6 +148,9 @@ public class APIController<T> {
     Object UpdatePass (@RequestBody JSONObject form) throws Exception {
         User user = userService.findById(form.getLong("id"));
         UserAuth userAuth = user.get();
+        if (!userAuth.getPassword().equals(form.getString("old"))) {
+            throw new RETCode(107);
+        }
         userAuth.setPassword(form.getString("password"));
         userAuthService.setOne(userAuth);
         return user;
@@ -379,6 +382,9 @@ public class APIController<T> {
     Object AddUnit (HttpSession session, @RequestBody JSONObject form) throws Exception {
         preHandle(session);
         Unit unit = new Unit();
+        if (unitService.findBy("name", form.getString("name")) != null) {
+            throw new RETCode(108);
+        }
         Long responsible = form.getLong("responsibleId");
         if (responsible != 0) {
             UserJob userJob = userJobService.findOne(responsible);
