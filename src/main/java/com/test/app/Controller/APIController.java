@@ -210,6 +210,7 @@ public class APIController<T> {
     @RequestMapping(value = "/user/addUser", method = RequestMethod.POST)
     @ResponseBody
     Object AddUser (@RequestBody JSONObject form) throws Exception{
+//        这些写在service里比较好吧
         User user = new User();
         JSONObject data = form.getJSONObject("data");
         user.setTel(data.getString("tel"));
