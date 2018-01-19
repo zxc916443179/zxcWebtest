@@ -5,7 +5,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.web.bind.annotation.ControllerAdvice;
-import org.springframework.web.servlet.mvc.method.annotation.RequestBodyAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
 import java.util.Map;
@@ -25,7 +24,7 @@ public class Response implements ResponseBodyAdvice<Object> {
         return apiResponse;
     }
 }
-class RETCode extends Exception {
+class RETException extends Exception {
     private Integer code;
 
     public Integer getCode() {
@@ -46,7 +45,7 @@ class RETCode extends Exception {
         this.codemap = codemap;
     }
 
-    RETCode(Integer code) {
+    RETException(Integer code) {
         super();
         this.code = code;
         codemap.put(0, "操作成功");
@@ -66,7 +65,7 @@ class APIResponse<T> {
     private Integer code;
     private String msg;
     private T body;
-   private RETCode retCode;
+   private RETException retException;
     public Integer getCode() {
         return code;
     }
@@ -93,9 +92,9 @@ class APIResponse<T> {
 
     public void response (T ret) {
         if (ret instanceof Exception) {
-            RETCode retCode = (RETCode)ret;
-            setCode(retCode.getCode());
-            setMsg(retCode.getCodemap().get(retCode.getCode()));
+            RETException retException = (RETException)ret;
+            setCode(retException.getCode());
+            setMsg(retException.getCodemap().get(retException.getCode()));
             setBody(null);
         } else {
             setMsg("操作成功");

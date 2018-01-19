@@ -135,7 +135,7 @@ public class MaterialAndGearController {
     @ResponseBody
     Object AddGearMeta (@RequestBody JSONObject form) throws Exception {
         if (materialAndGearService.findGearMetaDataByName(form.getString("name")) != null) {
-            throw new RETCode(104);
+            throw new RETException(104);
         }
         GearMetaData gearMetaData = JSONObject.toJavaObject(form, GearMetaData.class);
         materialAndGearService.setOne(gearMetaData);
@@ -171,14 +171,14 @@ public class MaterialAndGearController {
      */
     @ResponseBody
     @ExceptionHandler(Exception.class)
-    public RETCode handleException (Exception e) {
+    public RETException handleException (Exception e) {
         e.printStackTrace();
-        if (e instanceof RETCode) {
-            return (RETCode)e;
+        if (e instanceof RETException) {
+            return (RETException)e;
         } else if (e instanceof SQLException) {
-            return new RETCode(102);
+            return new RETException(102);
         } else {
-            return new RETCode(100);
+            return new RETException(100);
         }
     }
 
