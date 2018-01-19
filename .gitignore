@@ -9,3 +9,4 @@ test.db
 .idea/workspace.xml
 src/test/
 target/
+/test.db
