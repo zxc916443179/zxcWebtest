@@ -3,7 +3,6 @@ package com.test.app.Controller;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.sun.xml.internal.ws.resources.HttpserverMessages;
 import com.test.app.Entity.GearAndMaterial.Gear;
 import com.test.app.Entity.GearAndMaterial.GearStatus;
 import com.test.app.Entity.GearAndMaterial.Material;
@@ -80,7 +79,7 @@ public class APIController<T> {
             session.setAttribute(session.getId(), list.get(0).getAccount());
             return js;
         } else {
-            throw  new RETCode(106);
+            throw  new RETException(106);
         }
     }
     @RequestMapping(value = "/init", method = RequestMethod.POST)
@@ -94,7 +93,7 @@ public class APIController<T> {
             jsonObject.put("account", userAuthService.findByAccount(account).get(0).getAccount());
             return jsonObject;
         } else {
-            throw new RETCode(101);
+            throw new RETException(101);
         }
     }
     @RequestMapping(value = "/logout", method = RequestMethod.POST)
@@ -110,7 +109,7 @@ public class APIController<T> {
     @ResponseBody
     Object upload (@RequestBody MultipartFile file) throws Exception {
         if (file.isEmpty()) {
-            throw new RETCode(100);
+            throw new RETException(100);
         }
         String fileName = file.getOriginalFilename();
         String suffixName = fileName.substring(fileName.lastIndexOf('.'));
@@ -149,7 +148,7 @@ public class APIController<T> {
         User user = userService.findById(form.getLong("id"));
         UserAuth userAuth = user.get();
         if (!userAuth.getPassword().equals(form.getString("old"))) {
-            throw new RETCode(107);
+            throw new RETException(107);
         }
         userAuth.setPassword(form.getString("password"));
         userAuthService.setOne(userAuth);
@@ -178,7 +177,7 @@ public class APIController<T> {
     Object TestDB (HttpSession session) throws Exception{
         UserAuth auth = userAuthService.findByAccount((String)session.getAttribute(session.getId())).get(0);
         if (!auth.getUser().getRole().getRole().equals("dataBaseManager")) {
-            throw new RETCode(105);
+            throw new RETException(105);
         }
         return null;
     }
@@ -188,7 +187,7 @@ public class APIController<T> {
     Object TestMB (HttpSession session) throws Exception{
         UserAuth auth = userAuthService.findByAccount((String)session.getAttribute(session.getId())).get(0);
         if (!auth.getUser().getRole().getRole().equals("militaryBase")) {
-            throw new RETCode(105);
+            throw new RETException(105);
         }
         return null;
     }
@@ -197,7 +196,7 @@ public class APIController<T> {
     Object TestCM (HttpSession session) throws Exception{
         UserAuth auth = userAuthService.findByAccount((String)session.getAttribute(session.getId())).get(0);
         if (!auth.getUser().getRole().getRole().equals("centralManager")) {
-            throw new RETCode(105);
+            throw new RETException(105);
         }
         return null;
     }
@@ -210,7 +209,7 @@ public class APIController<T> {
     @RequestMapping(value = "/user/addUser", method = RequestMethod.POST)
     @ResponseBody
     Object AddUser (@RequestBody JSONObject form) throws Exception{
-//        这些写在service里比较好吧
+//        这些写在service里比较好
         User user = new User();
         JSONObject data = form.getJSONObject("data");
         user.setTel(data.getString("tel"));
@@ -225,7 +224,7 @@ public class APIController<T> {
         auth.setAccount(data.getString("account"));
         auth.setUser(user);
         if (userAuthService.findByAccount(data.getString("account")).size() != 0) {
-            throw new RETCode(103);
+            throw new RETException(103);
         }
         user.setAuth(auth);
         UserJob userJob = new UserJob();
@@ -384,7 +383,7 @@ public class APIController<T> {
         preHandle(session);
         Unit unit = new Unit();
         if (unitService.findBy("name", form.getString("name")) != null) {
-            throw new RETCode(108);
+            throw new RETException(108);
         }
         Long responsible = form.getLong("responsibleId");
         if (responsible != 0) {
@@ -505,14 +504,14 @@ public class APIController<T> {
      */
     @ResponseBody
     @ExceptionHandler(Exception.class)
-    public RETCode handleException (Exception e) {
+    public RETException handleException (Exception e) {
         e.printStackTrace();
-        if (e instanceof RETCode) {
-            return (RETCode)e;
+        if (e instanceof RETException) {
+            return (RETException)e;
         } else if (e instanceof SQLException) {
-            return new RETCode(102);
+            return new RETException(102);
         } else {
-            return new RETCode(100);
+            return new RETException(100);
         }
     }
 
@@ -548,10 +547,10 @@ public class APIController<T> {
      * preHandle
      * login validate
      */
-    String preHandle (HttpSession session) throws RETCode{
+    String preHandle (HttpSession session) throws RETException {
         String s = (String)session.getAttribute(session.getId());
         if (s == null) {
-            throw new RETCode(101);
+            throw new RETException(101);
         } else {
             return s;
         }
