@@ -32,7 +32,7 @@ public class Unit {
     @OrderColumn(name = "users", nullable = true)
     private List<UserJob> users;
 
-    public List<UserJob> getUsers() {
+    public List<UserJob> findUsers() {
         return users;
     }
 
@@ -40,7 +40,7 @@ public class Unit {
         this.users = users;
     }
 
-    public List<Unit> getUnits() {
+    public List<Unit> findUnits() {
         return units;
     }
 

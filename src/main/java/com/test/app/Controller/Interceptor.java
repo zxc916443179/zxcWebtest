@@ -39,7 +39,6 @@ public class Interceptor implements HandlerInterceptor {
         } else if (role.equals("dataBaseManager")) {
             if (path.indexOf("militaryBase") != -1 || path.indexOf("centralManager") != -1) throw new RETException(105);
         }
-        httpSession.setAttribute(httpSession.getId(), httpSession.getAttribute(httpSession.getId()));
         return true;
     }
 

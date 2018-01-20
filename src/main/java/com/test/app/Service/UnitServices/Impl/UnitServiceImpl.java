@@ -46,11 +46,11 @@ public class UnitServiceImpl implements UnitService {
 
     @Override
     public List<UserJob> getUsers(String name) {
-        return unitRepository.findByName(name).get(0).getUsers();
+        return unitRepository.findByName(name).get(0).findUsers();
     }
 
     @Override
     public List<Unit> getJuniorByName(String name) {
-        return unitRepository.findByName(name).get(0).getUnits();
+        return unitRepository.findByName(name).get(0).findUnits();
     }
 }

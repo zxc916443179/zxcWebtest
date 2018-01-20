@@ -171,7 +171,12 @@ public class APIController<T> {
         userService.remove(user);
         return null;
     }
-
+    @RequestMapping(value = "/user/getRole", method = RequestMethod.POST)
+    @ResponseBody
+    Object GetRole (@RequestBody JSONObject form) throws Exception {
+        User user = userService.findById(form.getLong("id"));
+        return Json.parseJson(user.getRole());
+    }
     @RequestMapping(value = "/dataBaseManager/test", method = RequestMethod.POST)
     @ResponseBody
     Object TestDB (HttpSession session) throws Exception{
@@ -210,8 +215,13 @@ public class APIController<T> {
     @ResponseBody
     Object AddUser (@RequestBody JSONObject form) throws Exception{
 //        这些写在service里比较好
+
         User user = new User();
         JSONObject data = form.getJSONObject("data");
+        if (userAuthService.findByAccount(data.getString("account")).size() != 0) {
+            System.out.println(userAuthService.findByAccount(data.getString("account")).size());
+            throw new RETException(103);
+        }
         user.setTel(data.getString("tel"));
         user.setRealName(data.getString("realName"));
         user.setGender(data.getString("gender"));
@@ -223,9 +233,6 @@ public class APIController<T> {
         auth.setPassword(data.getString("password"));
         auth.setAccount(data.getString("account"));
         auth.setUser(user);
-        if (userAuthService.findByAccount(data.getString("account")).size() != 0) {
-            throw new RETException(103);
-        }
         user.setAuth(auth);
         UserJob userJob = new UserJob();
         userJob.setManager(null);
@@ -418,12 +425,12 @@ public class APIController<T> {
         if (unit.getSuperior() != null) {
             Unit superior = unitService.findOne(unit.getSuperior().getId());
             superior.removeJunior(unit);
-            if (superior.getUnits().size() == 0) {
+            if (superior.findUnits().size() == 0) {
                 superior.setBased(true);
             }
         }
-        if (unit.getUnits().size() != 0) {
-            for (Unit i : unit.getUnits()) {
+        if (unit.findUnits().size() != 0) {
+            for (Unit i : unit.findUnits()) {
                 i.setSuperior(null);
             }
         }
@@ -462,7 +469,7 @@ public class APIController<T> {
         Unit s = unitService.findOne(superior);
         if (s != null){
             s.removeJunior(unit);
-            if (s.getUnits().size() == 0) {
+            if (s.findUnits().size() == 0) {
                 s.setBased(true);
             }
             unitService.setOne(s);
